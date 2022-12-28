@@ -1,66 +1,64 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from 'react';
 import {
   View,
-  Image,
   Text,
   StyleSheet,
   SafeAreaView,
   TextInput,
   TouchableOpacity,
   ActivityIndicator,
-} from "react-native";
-import Voice from "@react-native-community/voice";
+} from 'react-native';
+import Voice from '@react-native-community/voice';
 
 const App = () => {
-  const [result, setResult] = useState("");
+  const [result, setResult] = useState('');
   const [isLoading, setLoading] = useState(false);
 
-  useEffect(() => {
-    Voice.onSpeechStart = onSpeechStartHandler;
-    Voice.onSpeechEnd = onSpeechEndHandler;
-    Voice.onSpeechResults = onSpeechResultsHandler;
-
-    return () => {
-      Voice.destroy().then(Voice.removeAllListeners);
-    };
-  }, []);
-
-  const onSpeechStartHandler = (e) => {
-    console.log("start handler==>>>", e);
+  const speechStartHandler = e => {
+    console.log('speechStart successful', e);
   };
-  const onSpeechEndHandler = (e) => {
+  const speechEndHandler = e => {
     setLoading(false);
-    console.log("stop handler", e);
+    console.log('stop handler', e);
   };
 
-  const onSpeechResultsHandler = (e) => {
-    let text = e.value[0];
+  const speechResultsHandler = e => {
+    const text = e.value[0];
     setResult(text);
-    console.log("speech result handler", e);
   };
 
   const startRecording = async () => {
     setLoading(true);
     try {
-      await Voice.start("en-Us");
+      await Voice.start('en-Us');
     } catch (error) {
-      console.log("error raised", error);
+      console.log('error', error);
     }
   };
 
   const stopRecording = async () => {
     try {
       await Voice.stop();
-      setLoading(false)
+      setLoading(false);
     } catch (error) {
-      console.log("error raised", error);
+      console.log('error', error);
     }
   };
 
-  const clear = ( )=>{
-setResult("")
-  }
-  console.log("speech recognition");
+  const clear = () => {
+    setResult('');
+  };
+
+  useEffect(() => {
+    Voice.onSpeechStart = speechStartHandler;
+    Voice.onSpeechEnd = speechEndHandler;
+    Voice.onSpeechResults = speechResultsHandler;
+
+    return () => {
+      Voice.destroy().then(Voice.removeAllListeners);
+    };
+  }, []);
+  console.log('speech recognition');
   return (
     <View style={styles.container}>
       <SafeAreaView>
@@ -72,9 +70,9 @@ setResult("")
             placeholder="say something!"
             style={{
               flex: 1,
-              height: "100%",
+              height: '100%',
             }}
-            onChangeText={(text) => setResult(text)}
+            onChangeText={text => setResult(text)}
           />
         </View>
 
@@ -83,18 +81,18 @@ setResult("")
             <ActivityIndicator size="large" color="black" />
           ) : (
             <TouchableOpacity onPress={startRecording} style={styles.speak}>
-              <Text style={{ color: "white", fontWeight: "bold" }}>Speak</Text>
+              <Text style={{color: 'white', fontWeight: 'bold'}}>Speak</Text>
             </TouchableOpacity>
           )}
 
           <TouchableOpacity style={styles.stop} onPress={stopRecording}>
-            <Text style={{ color: "white", fontWeight: "bold" }}>Stop</Text>
+            <Text style={{color: 'white', fontWeight: 'bold'}}>Stop</Text>
           </TouchableOpacity>
         </View>
 
         <TouchableOpacity style={styles.clear} onPress={clear}>
-            <Text style={{ color: "white", fontWeight: "bold" }}>Clear</Text>
-          </TouchableOpacity>
+          <Text style={{color: 'white', fontWeight: 'bold'}}>Clear</Text>
+        </TouchableOpacity>
       </SafeAreaView>
     </View>
   );
@@ -103,59 +101,60 @@ setResult("")
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor:"#fff",
+    backgroundColor: '#fff',
     padding: 24,
   },
   headingText: {
-    alignSelf: "center",
+    alignSelf: 'center',
     marginVertical: 26,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     fontSize: 26,
   },
   textInputStyle: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    backgroundColor: "white",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: 'white',
     height: 300,
     borderRadius: 20,
     paddingVertical: 16,
     paddingHorizontal: 16,
-    shadowOffset: { width: 0, height: 1 },
+    shadowOffset: {width: 0, height: 1},
     shadowRadius: 2,
     elevation: 2,
     shadowOpacity: 0.4,
+    color: '#000',
   },
   speak: {
-    backgroundColor: "black",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
+    backgroundColor: 'black',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
     padding: 8,
     borderRadius: 8,
   },
   stop: {
-    backgroundColor: "red",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
+    backgroundColor: 'red',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
     padding: 8,
     borderRadius: 8,
   },
-  clear:{
-    backgroundColor: "black",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
+  clear: {
+    backgroundColor: 'black',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
     padding: 10,
     borderRadius: 8,
-    marginTop: 15
+    marginTop: 15,
   },
   btnContainer: {
-    display: "flex",
-    flexDirection: "row",
-    with: "50%",
-    justifyContent: "space-evenly",
+    display: 'flex',
+    flexDirection: 'row',
+    with: '50%',
+    justifyContent: 'space-evenly',
     marginTop: 24,
   },
 });
